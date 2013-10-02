@@ -2,15 +2,16 @@
 
 namespace Bernard\Benchmarks;
 
+use Bernard\Message\DefaultMessage;
+use Bernard\Middleware\MiddlewareBuilder;
 use Bernard\Producer;
 use Bernard\QueueFactory\InMemoryFactory;
-use Bernard\Message\DefaultMessage;
 
 class ProducerBenchmark extends \Athletic\AthleticEvent
 {
     public function setUp()
     {
-        $this->producer = new Producer(new InMemoryFactory());
+        $this->producer = new Producer(new InMemoryFactory(), new MiddlewareBuilder);
     }
 
     /**

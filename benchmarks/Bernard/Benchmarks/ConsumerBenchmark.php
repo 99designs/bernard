@@ -2,19 +2,20 @@
 
 namespace Bernard\Benchmarks;
 
-use Bernard\Message\DefaultMessage;
-use Bernard\Message\Envelope;
-use Bernard\QueueFactory\InMemoryFactory;
 use Bernard\Consumer;
-use Bernard\ServiceResolver\ObjectResolver;
+use Bernard\Envelope;
+use Bernard\Message\DefaultMessage;
+use Bernard\Middleware\MiddlewareBuilder;
+use Bernard\QueueFactory\InMemoryFactory;
+use Bernard\Router\SimpleRouter;
 use Bernard\Tests\Fixtures;
 
 class ConsumerBenchmark extends \Athletic\AthleticEvent
 {
     public function setUp()
     {
-        $services = new ObjectResolver;
-        $services->register('SendNewsletter', new Fixtures\Service);
+        $router = new SimpleRouter;
+        $router->add('ImportUsers', new Fixtures\Service);
 
         $this->queues = new InMemoryFactory();
 
@@ -25,7 +26,7 @@ class ConsumerBenchmark extends \Athletic\AthleticEvent
             );
         }
 
-        $this->consumer = new Consumer($services);
+        $this->consumer = new Consumer($router, new MiddlewareBuilder);
     }
 
     /**
